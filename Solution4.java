@@ -5,47 +5,49 @@ import java.util.List;
 public class Solution4 {
     public static void main(String[] args)
     {
-        Integer N = Integer.valueOf(args[0]) - 1;
+        for (String arg : args) {
+            Integer N = Integer.valueOf(arg) - 1;
 
-        List<Integer> current = Arrays.asList(1);
-        for (int n = 0; n < N; n++) {
-            List<Integer> next = new ArrayList<>();
+            List<Integer> current = Arrays.asList(1);
+            for (int n = 0; n < N; n++) {
+                List<Integer> next = new ArrayList<>();
 
-            int previous = 0;
-            List<Integer> group = new ArrayList<>();
+                int previous = 0;
+                List<Integer> group = new ArrayList<>();
 
 
-            for (int i=0;i<current.size();i++) {
+                for (int i = 0; i < current.size(); i++) {
 
-                Integer actual = current.get(i);
+                    Integer actual = current.get(i);
 
-                if (isFirstElement(previous)) {
-                    //no values before
-                    group.add(actual);
+                    if (isFirstElement(previous)) {
+                        //no values before
+                        group.add(actual);
+                    }
+
+                    if (previousElementWasEqual(previous, actual)) {
+                        //if the same value before
+                        group.add(actual);
+                    }
+
+                    if (!previousElementWasEqual(previous, actual) && !isFirstElement(previous)) {
+                        addGroup(next, group);
+                        group = new ArrayList<>();
+                        group.add(actual);
+                    }
+
+
+                    if (isLastElement(i, current.size() - 1)) {
+                        addGroup(next, group);
+                    }
+
+                    previous = actual;
                 }
-
-                if (previousElementWasEqual(previous, actual)) {
-                    //if the same value before
-                    group.add(actual);
-                }
-
-                if (!previousElementWasEqual(previous, actual) && !isFirstElement(previous)) {
-                    addGroup(next, group);
-                    group = new ArrayList<>();
-                    group.add(actual);
-                }
-
-
-                if (isLastElement(i, current.size() - 1)) {
-                    addGroup(next, group);
-                }
-
-                previous = actual;
+                current = next;
             }
-            current = next;
-        }
 
-        System.out.println(current.stream().reduce((integer, integer2) -> integer + integer2).get());
+            System.out.println(current.stream().reduce((integer, integer2) -> integer + integer2).get());
+        }
     }
 
     private static void addGroup(List<Integer> next, List<Integer> group) {
